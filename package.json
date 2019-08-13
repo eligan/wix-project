@@ -1,0 +1,20 @@
+{
+  "name": "wix-project",
+  "version": "1.0.0",
+  "description": "15 puzzle",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Roman Liuk",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-plugin-import": "^2.18.0"
+  },
+  "dependencies": {
+    "config": "3.2.2",
+    "terminal-kit": "1.30.0"
+  }
+}
