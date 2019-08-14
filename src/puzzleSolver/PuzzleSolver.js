@@ -1,24 +1,37 @@
 const Vertex = require('./Vertex');
 const PriorityQueue = require('./PriorityQueue');
+const LogProvider = require('../providers/LogProvider');
 
 class PuzzleSolver {
 	constructor(initialBoard) {
-		this.open = new PriorityQueue();
+        this.logger = LogProvider.logger.child({class: 'PuzzleSolver'});
+        this.close = []; //contains vertex hashes
+        this.open = new PriorityQueue();
 		this.addVertexToOpen(new Vertex(null, initialBoard, null));
-		this.close = []; //contains vertex hashes
-	}
+    }
 
 	getBestOpenVertex() {
-		const queueItem = this.open.dequeue();
-		return queueItem.element;
+		const {element} = this.open.dequeue();
+        this.logger.info(
+            'Get the best vertex with metrics:  steps=%d  wrongTiles=%d  manhattan=%d  linearConflicts=%d  measure=%d',
+            element.steps,
+            element.wrongTiles,
+            element.manhattan,
+            element.linearConflicts,
+            element.measure,
+        );
+        return element;
 	}
 
 	addVertexToOpen(vertex) {
-		this.open.enqueue(vertex, vertex.getMeasure());
+        this.logger.info('Add vertex to OPEN list:', vertex.getHash());
+        this.open.enqueue(vertex, vertex.getMeasure());
 	}
 
 	addVertexToClose(vertex) {
-		this.close.push(vertex.getHash());
+	    const hash = vertex.getHash();
+        this.logger.info('Add vertex to CLOSE list:', hash);
+        this.close.push(hash);
 	}
 
 	isVertexInClose(vertex) {
@@ -26,12 +39,15 @@ class PuzzleSolver {
 	}
 
 	run() {
-		while (!this.open.isEmpty()) {
+        this.logger.info('Start solver algorythm');
+        while (!this.open.isEmpty()) {
 			const vertex = this.getBestOpenVertex();
-			// console.log('Steps: ', vertex.steps, 'Wrong: ', vertex.wrongTiles, ' Manhattan: ', vertex.manhattan, ' Linear: ',vertex.linearConflicts, ' Measure: ', vertex.measure);
+
 			if (vertex.isGoal()) {
-				return vertex.getPath();
+                this.logger.info('Find goal vertex');
+                return vertex.getPath();
 			}
+
 			this.addVertexToClose(vertex);
 			const childrens = vertex.board.getChildes();
 			childrens.forEach(({childBoard, move}) => {

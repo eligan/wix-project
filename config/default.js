@@ -35,10 +35,7 @@ const config = {
 		}
 	},
 	game: {
-		field: {
-			rows: 3,
-			cols: 3,
-		},
+        fieldSize: 4,
 		moves: directions
 	},
 	input: {

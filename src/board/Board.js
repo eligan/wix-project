@@ -2,35 +2,38 @@ const FieldFactory = require('./FieldFactory');
 const config = require('config');
 
 class Board {
-	constructor(initialState) {
-		if (initialState) {
-			this.state = initialState;
-		} else {
-			this.state = new FieldFactory().generateField();
-		}
-		this.startTime = Date.now();
+	constructor(initialState, steps, startTime) {
+        this.state = initialState || FieldFactory.generateField(config.game.fieldSize);
+        this.steps = steps || 0;
+		this.startTime = startTime || Date.now();
 		this.duration = 0;
-		this.steps = 0;
 		this.finished = this.isFinished();
 		this.blankTileIndex = this.getBlankTileIndex();
 		this.possibleMoves = this.findPossibleMoves();
 	}
 
 	getState() {
-		const {field, rows, cols} = this.state;
-		return {field, rows, cols};
+		return this.state;
 	}
+
+	getSteps() {
+	    return this.steps;
+    }
+
+    getStartTime() {
+	    return this.startTime;
+    }
 
 	getBlankTileIndex() {
 		return this.state.field.indexOf(0);
 	}
 
 	getTopTileIndex() {
-		return this.blankTileIndex - this.state.cols;
+		return this.blankTileIndex - this.state.size;
 	}
 
 	getBottomTileIndex() {
-		return this.blankTileIndex + this.state.cols;
+		return this.blankTileIndex + this.state.size;
 	}
 
 	getRightTileIndex() {
@@ -60,12 +63,12 @@ class Board {
 		}
 
 		const rightTileIndex = this.getRightTileIndex();
-		if (rightTileIndex % this.state.cols !== 0) {
+		if (rightTileIndex % this.state.size !== 0) {
 			steps.push(RIGHT);
 		}
 
 		const leftTileIndex = this.getLeftTileIndex();
-		if (leftTileIndex >= 0 && leftTileIndex % this.state.cols < this.state.cols - 1) {
+		if (leftTileIndex >= 0 && leftTileIndex % this.state.size < this.state.size - 1) {
 			steps.push(LEFT);
 		}
 
@@ -95,6 +98,7 @@ class Board {
 		}
 		this.swapTiles(this.blankTileIndex, moveIndex);
 		this.incStepCount();
+		this.updateDuration();
 		this.finished = this.isFinished();
 		this.blankTileIndex = this.getBlankTileIndex();
 		this.possibleMoves = this.findPossibleMoves();
@@ -102,9 +106,9 @@ class Board {
 
 	getChildes() {
 		const moves = this.possibleMoves;
-		const {field, rows, cols} = this.getState();
+		const {field, size} = this.state;
 		return moves.map((move) => {
-			const childBoard = new Board({rows, cols, field: Array.from(field)});
+			const childBoard = new Board({size, field: Array.from(field)}, this.steps, this.startTime);
 			childBoard.makeMove(move);
 			return {childBoard, move};
 		});
@@ -112,19 +116,24 @@ class Board {
 
 	swapTiles(i, j) {
 		const {field} = this.state;
-		[field[i], field[j]] = [field[j], field[i]];
+        if (i === j || i < 0 || j < 0 || i >= field.length || j >= field.length) {
+            return;
+        }
+        [field[i], field[j]] = [field[j], field[i]];
 	}
+
+	updateDuration() {
+        this.duration = Date.now() - this.startTime;
+    }
 
 	isFinished() {
 		const {field} = this.state;
-		const finished = field.reduce((flag, item, index, arr) => {
+        return field.reduce((flag, item, index, arr) => {
 			if (index === arr.length - 1) {
 				return flag && (item === 0);
 			}
 			return flag && (item === index + 1);
 		}, true);
-		this.duration = Date.now() - this.startTime;
-		return finished;
 	}
 
 	getStats() {

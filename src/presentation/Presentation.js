@@ -49,10 +49,10 @@ class Presentation {
 	renderBoard(state) {
 		this.term.clear();
 		this.renderMemo();
-		const {field, rows, cols} = state;
-		for (let i = 0; i < rows; i++) {
-			const row = field.slice(i * cols, (i + 1) * cols);
-			this.term.green('-----'.repeat(cols) + '-\n');
+		const {field, size} = state;
+		for (let i = 0; i < size; i++) {
+			const row = field.slice(i * size, (i + 1) * size);
+			this.term.green('-----'.repeat(size) + '-\n');
 			this.term.green('|');
 
 			for(let j = 0; j < row.length; j++) {
@@ -69,7 +69,7 @@ class Presentation {
 			}
 			this.term.white('\n');
 		}
-		this.term.green('-----'.repeat(cols) + '-\n');
+		this.term.green('-----'.repeat(size) + '-\n');
 	}
 
 	async renderStats(stats) {

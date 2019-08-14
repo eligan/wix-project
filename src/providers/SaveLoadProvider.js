@@ -28,21 +28,25 @@ class SaveLoadProvider {
 		return [];
 	}
 
-	async saveGame(name, state) {
-		const data = `${state.rows} ${state.cols} ${state.field.join(' ')}`;
+	async saveGame(name, data) {
+	    const {state: {size, field}, startTime, steps} = data;
+		const serializedData = `${startTime} ${steps} ${size} ${field.join(' ')}`;
 		const filePath = path.resolve(this.savedGamesFolderPath, name);
-		await writeFile(filePath, data);
+		await writeFile(filePath, serializedData);
 	}
 
-	async getSavedGameState(name) {
+	async getSavedGame(name) {
 		const filePath = path.resolve(this.savedGamesFolderPath, name);
 		let data = await readFile(filePath, {encoding: 'utf8'});
-		const [rows, cols, ...field] = data
+		const [startTime, steps, size, ...field] = data
 			.split(' ')
 			.map(item => parseInt(item));
-		return {field, rows, cols};
-	}
-
+		return {
+            state: {field, size},
+            startTime,
+            steps,
+        };
+    };
 }
 
 module.exports = SaveLoadProvider;

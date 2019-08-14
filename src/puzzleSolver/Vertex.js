@@ -14,10 +14,6 @@ class Vertex {
 		return this.board.getState().field.join('-');
 	}
 
-	getBoard() {
-		return this.board;
-	}
-
 	getMeasure() {
 		return this.measure;
 	}
@@ -47,15 +43,15 @@ class Vertex {
 	}
 
 	getManhattanDistance() {
-		const {field, cols} = this.board.getState();
+		const {field, size} = this.board.getState();
 		return field.reduce((summ, item, index) => {
 			if (item === 0) {
 				return summ
 			}
 			const winIndex = item - 1;
 			const delta = Math.abs(index - winIndex);
-			const row = (delta - delta % cols) / cols;
-			const col = delta % cols;
+			const row = (delta - delta % size) / size;
+			const col = delta % size;
 			return summ + row + col
 		}, 0);
 	}
@@ -71,22 +67,22 @@ class Vertex {
 	}
 
 	getLinearConflictsCount() {
-		const {field, rows, cols} = this.board.getState();
+		const {field, size} = this.board.getState();
 		let conflictCount = 0;
 		// check each row for linear conflict
-		for (let row = 0; row < rows; row++)
-			for (let i = row * cols; i < (row + 1) * cols - 1; i++) {
+		for (let row = 0; row < size; row++)
+			for (let i = row * size; i < (row + 1) * size - 1; i++) {
 				if (field[i] === 0) {
 					continue;
 				}
 				const iGoal = field[i] - 1;
-				const iGoalRow = (iGoal - iGoal % cols) / cols;
-				for (let j = i + 1; j < (row + 1) * cols; j++) {
+				const iGoalRow = (iGoal - iGoal % size) / size;
+				for (let j = i + 1; j < (row + 1) * size; j++) {
 					if (field[j] === 0) {
 						continue;
 					}
 					const jGoal = field[j] - 1;
-					const jGoalRow = (jGoal - jGoal % cols) / cols;
+					const jGoalRow = (jGoal - jGoal % size) / size;
 					const necessityCondition = (i !== iGoal) && (j !== jGoal) && (iGoalRow === row && jGoalRow === row);
 					const sufficiencyCondition = (iGoal > jGoal);
 					if (necessityCondition && sufficiencyCondition) {
@@ -95,19 +91,19 @@ class Vertex {
 				}
 			}
 		// check each column for linear conflict
-		for (let col = 0; col < cols; col++)
-			for (let i = col; i < cols * (rows - 1) + col; i = i + cols) {
+		for (let col = 0; col < size; col++)
+			for (let i = col; i < size * (size - 1) + col; i = i + size) {
 				if (field[i] === 0) {
 					continue;
 				}
 				const iGoal = field[i] - 1;
-				const iGoalCol = iGoal % cols;
-				for (let j = i + cols; j <= cols * (rows - 1) + col; j = j + cols) {
+				const iGoalCol = iGoal % size;
+				for (let j = i + size; j <= size * (size - 1) + col; j = j + size) {
 					if (field[j] === 0) {
 						continue;
 					}
 					const jGoal = field[j] - 1;
-					const jGoalCol = jGoal % cols;
+					const jGoalCol = jGoal % size;
 					const necessityCondition = (i !== iGoal) && (j !== jGoal) && (iGoalCol === col && jGoalCol === col);
 					const sufficiencyCondition = (iGoal > jGoal);
 					if (necessityCondition && sufficiencyCondition) {

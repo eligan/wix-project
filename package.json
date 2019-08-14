@@ -2,9 +2,10 @@
   "name": "wix-project",
   "version": "1.0.0",
   "description": "15 puzzle",
-  "main": "index.js",
+  "main": "./src/Master.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest -c jest.config.js",
+    "start": "node ./src/Master.js"
   },
   "author": "Roman Liuk",
   "license": "ISC",
@@ -15,6 +16,9 @@
   },
   "dependencies": {
     "config": "3.2.2",
+    "jest": "^24.8.0",
+    "pino": "^5.13.2",
+    "sinon": "^7.4.1",
     "terminal-kit": "1.30.0"
   }
 }

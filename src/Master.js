@@ -13,14 +13,15 @@ async function sleep(time) {
 
 class Master {
 	constructor() {
-		this.SLP = new SaveLoadProvider();
-		this.logger = new LogProvider();
+        this.logger = LogProvider.logger.child({class: 'Master'});
+        this.SLP = new SaveLoadProvider();
 		this.presentation = new Presentation(terminal);
 	}
 
 	async run() {
 		this.presentation.renderInfo();
 		const selectedMenuItem = await this.presentation.mainMenuSelect();
+        this.logger.info('Selected menu item:', selectedMenuItem);
 		const mainMenuItems = config.menu.mainItems;
 		switch (selectedMenuItem) {
 			case mainMenuItems.NEW_GAME:
@@ -34,19 +35,18 @@ class Master {
 		}
 	}
 
-	async startGame(initialState) {
-		const board = new Board(initialState);
-		const input = new InputController(terminal);
-		const state = board.getState();
-		this.presentation.renderBoard(state);
-		input.startCaptureInput();
+	async startGame(initialState, steps, startTime) {
+        this.logger.info('New game started');
+        const board = new Board(initialState, steps, startTime);
+        const input = new InputController(terminal);
+		this.presentation.renderBoard(board.getState());
+        input.startCaptureInput();
 
 		return new Promise((resolve) => {
 			input.on('move', async (direction) => {
 				board.makeMove(direction);
 
-				const state = board.getState();
-				this.presentation.renderBoard(state);
+				this.presentation.renderBoard(board.getState());
 
 				if (board.isFinished()) {
 					input.stopCaptureInput();
@@ -61,12 +61,13 @@ class Master {
 				const solver = new PuzzleSolver(board);
 				const path = solver.run();
 				await this.presentation.renderPressAnyKey('Computed!');
+                this.presentation.renderBoard(board.getState());
+
 				for (let i = 0; i < path.length; i++) {
-					await sleep(1000);
+					await sleep(500);
 					const direction = path[i];
 					board.makeMove(direction);
-					const state = board.getState();
-					this.presentation.renderBoard(state);
+					this.presentation.renderBoard(board.getState());
 
 					if (board.isFinished()) {
 						input.stopCaptureInput();
@@ -80,7 +81,9 @@ class Master {
 				input.stopCaptureInput();
 				const name = await this.presentation.gameNameInput();
 				const state = board.getState();
-				await this.SLP.saveGame(name, state);
+				const startTime = board.getStartTime();
+				const steps = board.getSteps();
+				await this.SLP.saveGame(name, {state, startTime, steps});
 				resolve();
 			});
 
@@ -93,23 +96,31 @@ class Master {
 	}
 
 	async loadGame() {
-		const savedGames = await this.SLP.getSavedGames();
+        this.logger.info('Loading game');
+        const savedGames = await this.SLP.getSavedGames();
 		const gameName = await this.presentation.loadGameMenuSelect(savedGames);
-		if (!gameName) {
+        this.logger.info('Selected game name:', gameName);
+        if (!gameName) {
 			return;
 		}
-		const loadedSate = await this.SLP.getSavedGameState(gameName);
-		await this.startGame(loadedSate);
+        const savedGame = await this.SLP.getSavedGame(gameName);
+		await this.startGame(savedGame.state, savedGame.steps, savedGame.startTime);
 	}
 
 	exitGame() {
-		process.exit();
+        this.logger.info('Exit game');
+        process.exit();
 	}
 }
 
 (async () => {
 	const master = new Master();
 	while(true) {
-		await master.run();
+	    try {
+            await master.run();
+        } catch (error) {
+            LogProvider.logger.error(error);
+            process.exit(1);
+        }
 	}
 })();
