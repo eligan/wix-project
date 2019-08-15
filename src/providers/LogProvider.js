@@ -1,5 +1,5 @@
 const config = require('config');
-const Pino = require('pino');
+const pino = require('pino');
 const fs = require('fs');
 const path = require('path');
 
@@ -12,13 +12,13 @@ class LogProvider {
     }
 
     static get logFilePath()  {
-        return path.resolve(this.logsFolderPath, initTime.toISOString());
+        return path.resolve(LogProvider.logsFolderPath, initTime.toISOString());
     }
 
 	static get logger() {
 		LogProvider.createFolder(LogProvider.logsFolderPath);
 		if (!this[loggerKey]) {
-		    this[loggerKey] = Pino({base: null}, Pino.destination(LogProvider.logFilePath));
+		    this[loggerKey] = pino({base: null}, pino.destination(LogProvider.logFilePath));
         }
 		return this[loggerKey];
 	}

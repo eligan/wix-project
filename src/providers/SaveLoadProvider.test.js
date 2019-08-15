@@ -6,6 +6,14 @@ const {promisify} = require('util');
 const readFile = promisify(fs.readFile);
 
 describe('SaveLoadProvider', () => {
+
+    afterAll(() => {
+        const testPath = path.resolve(__dirname, `../../${config.store.savedGamesFolder}`);
+        if (fs.existsSync(testPath)) {
+            fs.rmdirSync(testPath);
+        }
+    });
+
     describe('.constructor()', () => {
         const provider = new SaveLoadProvider();
 

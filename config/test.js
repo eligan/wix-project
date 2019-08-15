@@ -4,6 +4,7 @@ const config = {
     },
     store: {
         savedGamesFolder: 'savedGamesTest',
+        logsFolder: 'logsTest',
     }
 };
 
