@@ -33,3 +33,10 @@ Puzzle solver consists with:
 You will definitely figure out how to run it withing the game process.
 But I would recommend you to change size of field from 4 to 3 to see how it works.
 Also you may run it as is but then it will take some time. The worst case that I have was 4 hours.
+
+
+## HOW TO
+
+1) install dependencies `$ npm install`
+2) be sure that everything is ok `$ npm run test`
+2) try to solve 15-puzzle `$ npm run start`
