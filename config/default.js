@@ -39,7 +39,12 @@ const config = {
 		moves: directions
 	},
 	input: {
-		controls: directions
+		controls: {
+            ESCAPE: 'ESCAPE',
+            SHIFT_R: 'R',
+            SHIFT_S: 'S',
+		    ...directions
+        }
 	}
 };
 

@@ -1,14 +1,14 @@
 const config = require('config');
 const EventEmitter = require('events');
 
-class InputController {
+class InputProvider {
 	constructor(terminal) {
 		this.term = terminal;
 		this.ee = new EventEmitter();
 	}
 
 	startCaptureInput() {
-		const {UP, DOWN, RIGHT, LEFT} = config.input.controls;
+		const {UP, DOWN, RIGHT, LEFT, ESCAPE, SHIFT_R, SHIFT_S} = config.input.controls;
 		this.term.grabInput({ mouse: 'button' });
 		this.term.on('key', (name) => {
 			switch (name) {
@@ -24,13 +24,13 @@ class InputController {
 				case LEFT:
 					this.ee.emit('move', RIGHT);
 					break;
-				case 'ESCAPE':
+				case ESCAPE:
 					this.ee.emit('escape');
 					break;
-				case 'R':
+				case SHIFT_R:
 					this.ee.emit('solve');
 					break;
-				case 'S':
+				case SHIFT_S:
 					this.ee.emit('save');
 					break;
 			}
@@ -50,4 +50,4 @@ class InputController {
 	}
 }
 
-module.exports = InputController;
+module.exports = InputProvider;

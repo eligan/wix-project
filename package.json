@@ -4,7 +4,7 @@
   "description": "15 puzzle",
   "main": "./src/Master.js",
   "scripts": {
-    "test": "jest -c jest.config.js",
+    "test": "NODE_ENV=test jest -c jest.config.js",
     "start": "node ./src/Master.js"
   },
   "author": "Roman Liuk",

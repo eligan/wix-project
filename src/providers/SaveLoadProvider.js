@@ -2,6 +2,8 @@ const config = require('config');
 const fs = require('fs');
 const path = require('path');
 const {promisify} = require('util');
+const LogProvider = require('./LogProvider');
+
 
 const readdir = promisify(fs.readdir);
 const writeFile = promisify(fs.writeFile);
@@ -9,7 +11,8 @@ const readFile = promisify(fs.readFile);
 
 class SaveLoadProvider {
 	constructor() {
-		this.savedGamesFolderPath = path.resolve(__dirname, `../../${config.store.savedGamesFolder}`);
+        this.logger = LogProvider.logger.child({class: 'SaveLoadProvider'});
+        this.savedGamesFolderPath = path.resolve(__dirname, `../../${config.store.savedGamesFolder}`);
 		this.createFolder(this.savedGamesFolderPath);
 	}
 
@@ -23,7 +26,7 @@ class SaveLoadProvider {
 		try {
 			return await readdir(this.savedGamesFolderPath);
 		} catch (err) {
-			// write errors to file
+			this.logger.error(err);
 		}
 		return [];
 	}

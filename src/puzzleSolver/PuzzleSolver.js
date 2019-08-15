@@ -12,7 +12,7 @@ class PuzzleSolver {
 
 	getBestOpenVertex() {
 		const {element} = this.open.dequeue();
-        this.logger.info(
+        this.logger.debug(
             'Get the best vertex with metrics:  steps=%d  wrongTiles=%d  manhattan=%d  linearConflicts=%d  measure=%d',
             element.steps,
             element.wrongTiles,
@@ -24,13 +24,13 @@ class PuzzleSolver {
 	}
 
 	addVertexToOpen(vertex) {
-        this.logger.info('Add vertex to OPEN list:', vertex.getHash());
+        this.logger.debug('Add vertex to OPEN list:', vertex.getHash());
         this.open.enqueue(vertex, vertex.getMeasure());
 	}
 
 	addVertexToClose(vertex) {
 	    const hash = vertex.getHash();
-        this.logger.info('Add vertex to CLOSE list:', hash);
+        this.logger.debug('Add vertex to CLOSE list:', hash);
         this.close.push(hash);
 	}
 
@@ -39,12 +39,12 @@ class PuzzleSolver {
 	}
 
 	run() {
-        this.logger.info('Start solver algorythm');
+        this.logger.debug('Start solver algorythm');
         while (!this.open.isEmpty()) {
 			const vertex = this.getBestOpenVertex();
 
 			if (vertex.isGoal()) {
-                this.logger.info('Find goal vertex');
+                this.logger.debug('Find goal vertex');
                 return vertex.getPath();
 			}
 

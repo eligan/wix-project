@@ -1,7 +1,7 @@
 const Presentation = require('./presentation/Presentation');
 const SaveLoadProvider = require('./providers/SaveLoadProvider');
 const LogProvider = require('./providers/LogProvider');
-const InputController = require('./inputControllers/InputController');
+const InputProvider = require('./providers/InputProvider');
 const Board = require('./board/Board');
 const PuzzleSolver = require('./puzzleSolver/PuzzleSolver');
 const config = require('config');
@@ -38,7 +38,7 @@ class Master {
 	async startGame(initialState, steps, startTime) {
         this.logger.info('New game started');
         const board = new Board(initialState, steps, startTime);
-        const input = new InputController(terminal);
+        const input = new InputProvider(terminal);
 		this.presentation.renderBoard(board.getState());
         input.startCaptureInput();
 
