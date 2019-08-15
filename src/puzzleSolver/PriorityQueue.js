@@ -6,7 +6,6 @@ class QElement {
 }
 
 class PriorityQueue {
-
 	constructor() {
 		this.items = [];
 	}
@@ -28,7 +27,13 @@ class PriorityQueue {
 		}
 	}
 
-	dequeue() {
+    front() {
+        if (this.isEmpty())
+            return null;
+        return this.items[0];
+    }
+
+    dequeue() {
 		if (this.isEmpty())
 			return null;
 		return this.items.shift();
@@ -37,6 +42,10 @@ class PriorityQueue {
 	isEmpty() {
 		return this.items.length === 0;
 	}
+
+	size() {
+	    return this.items.length;
+    }
 }
 
 module.exports = PriorityQueue;

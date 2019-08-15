@@ -5,7 +5,7 @@ class Vertex {
 		this.board = board || new Board();
 		this.parentVertex = parentVertex || null;
 		this.move = move || null;
-		this.steps = this.getSteps();
+		this.steps = this.board.getSteps();
 		this.wrongTiles = this.getWrongTiles();
 		this.manhattan = this.getManhattanDistance();
 		this.linearConflicts = this.getLinearConflictsCount();
@@ -20,10 +20,6 @@ class Vertex {
 		return this.measure;
 	}
 
-	getParentVertex() {
-		return this.parentVertex;
-	}
-
 	getPath() {
 		const result = [this.move];
 		let pVertex = this.parentVertex;
@@ -32,16 +28,6 @@ class Vertex {
 			pVertex = pVertex.parentVertex;
 		}
 		return result.reverse();
-	}
-
-	getSteps() {
-		let steps = 0;
-		let parent = this.parentVertex;
-		while (parent !== null) {
-			steps++;
-			parent = parent.getParentVertex();
-		}
-		return steps;
 	}
 
 	getManhattanDistance() {
