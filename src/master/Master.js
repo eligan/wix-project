@@ -1,9 +1,9 @@
-const Presentation = require('./presentation/Presentation');
-const SaveLoadProvider = require('./providers/SaveLoadProvider');
-const LogProvider = require('./providers/LogProvider');
-const InputProvider = require('./providers/InputProvider');
-const Board = require('./board/Board');
-const PuzzleSolver = require('./puzzleSolver/PuzzleSolver');
+const Presentation = require('../presentation/Presentation');
+const SaveLoadProvider = require('../providers/SaveLoadProvider');
+const LogProvider = require('../providers/LogProvider');
+const InputProvider = require('../providers/InputProvider');
+const Board = require('../board/Board');
+const PuzzleSolver = require('../puzzleSolver/PuzzleSolver');
 const config = require('config');
 const terminal = require('terminal-kit').terminal ;
 
@@ -113,14 +113,4 @@ class Master {
 	}
 }
 
-(async () => {
-	const master = new Master();
-	while(true) {
-	    try {
-            await master.run();
-        } catch (error) {
-            LogProvider.logger.error(error);
-            process.exit(1);
-        }
-	}
-})();
+module.exports = Master;

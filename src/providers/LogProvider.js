@@ -18,7 +18,13 @@ class LogProvider {
 	static get logger() {
 		LogProvider.createFolder(LogProvider.logsFolderPath);
 		if (!this[loggerKey]) {
-		    this[loggerKey] = pino({base: null}, pino.destination(LogProvider.logFilePath));
+		    const transport = config.logs.enabled
+                ? pino.destination(LogProvider.logFilePath)
+                : null;
+		    this[loggerKey] = pino({
+                base: null,
+                enabled: config.logs.enabled,
+            }, transport);
         }
 		return this[loggerKey];
 	}

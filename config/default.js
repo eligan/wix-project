@@ -45,7 +45,10 @@ const config = {
             SHIFT_S: 'S',
 		    ...directions
         }
-	}
+	},
+    logs: {
+        enabled: true,
+    },
 };
 
 module.exports = config;

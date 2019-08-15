@@ -1,6 +1,7 @@
 node_modules
 reports
 logs
+logsTest
 savedGames
 savedGamesTest
 package-lock.json

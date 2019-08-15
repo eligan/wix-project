@@ -1,8 +1,10 @@
+const Board = require('./../board/Board');
+
 class Vertex {
 	constructor(parentVertex, board, move) {
-		this.board = board;
-		this.parentVertex = parentVertex;
-		this.move = move;
+		this.board = board || new Board();
+		this.parentVertex = parentVertex || null;
+		this.move = move || null;
 		this.steps = this.getSteps();
 		this.wrongTiles = this.getWrongTiles();
 		this.manhattan = this.getManhattanDistance();

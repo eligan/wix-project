@@ -2,10 +2,10 @@
   "name": "wix-project",
   "version": "1.0.0",
   "description": "15 puzzle",
-  "main": "./src/Master.js",
+  "main": "src/master/Master.js",
   "scripts": {
     "test": "NODE_ENV=test jest -c jest.config.js",
-    "start": "node ./src/Master.js"
+    "start": "node ./src/index.js"
   },
   "author": "Roman Liuk",
   "license": "ISC",
