@@ -11,13 +11,13 @@ where tile number 1 is at the top left corner and empty one is at the bottom rig
 ## IMPLEMENTATION
 
 This 15-puzzle game is implemented on Node.js v8.9.0. It consists with several parts:
-* Board - class that manage field and tile moves;
-* FieldFactory - class that generate field and check it solvability;
-* InputProvider - class that is listening user input;
-* LogProvider - class that manage logs (used pino logger under the hood);
-* SaveLoadProvider - class that manage saved games;
-* Presentation - class that render everything (used terminal-kit under the hood);
-* Master - class that connect all these pieces;
+* __Board__ - class that manage field and tile moves;
+* __FieldFactory__ - class that generate field and check it solvability;
+* __InputProvider__ - class that is listening user input;
+* __LogProvider__ - class that manage logs (used pino logger under the hood);
+* __SaveLoadProvider__ - class that manage saved games;
+* __Presentation__ - class that render everything (used terminal-kit under the hood);
+* __Master__ - class that connect all these pieces;
 
 Also I added a small feature on my own initiative. It is 15-puzzle solver.
 It implement __A* algorithm__. And it use several heuristics:
@@ -26,9 +26,9 @@ It implement __A* algorithm__. And it use several heuristics:
 * Number of linear conflicts;
 
 Puzzle solver consists with:
-* Vertex - class that represent some state of board and calculate heuristics;
-* PriorityQueue - class that implement prioritized queue;
-* PuzzleSolver - class that connect previous two guys and implement A* algorithm;
+* __Vertex__ - class that represent some state of board and calculate heuristics;
+* __PriorityQueue__ - class that implement prioritized queue;
+* __PuzzleSolver__ - class that connect previous two guys and implement A* algorithm;
 
 You will definitely figure out how to run it withing the game process.
 But I would recommend you to change size of field from 4 to 3 to see how it works.
